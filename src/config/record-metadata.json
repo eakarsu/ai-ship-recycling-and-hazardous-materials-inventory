@@ -1,0 +1,601 @@
+{
+  "RecyclingVessel": {
+    "name": "RecyclingVessel",
+    "fields": [
+      {
+        "name": "name",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "imoNumber",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "flag",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "owner",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "grossTonnage",
+        "kind": "number",
+        "required": true,
+        "min": 0
+      },
+      {
+        "name": "surveyDueAt",
+        "kind": "date",
+        "required": true
+      },
+      {
+        "name": "status",
+        "kind": "string",
+        "required": true
+      }
+    ]
+  },
+  "VesselComponent": {
+    "name": "VesselComponent",
+    "fields": [
+      {
+        "name": "name",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "componentCode",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "location",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "installedAt",
+        "kind": "date",
+        "required": true
+      },
+      {
+        "name": "manufacturer",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "status",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "recyclingVesselId",
+        "kind": "string",
+        "required": true,
+        "relation": "RecyclingVessel"
+      }
+    ],
+    "parent": {
+      "entity": "RecyclingVessel",
+      "field": "recyclingVesselId"
+    }
+  },
+  "MaterialDeclaration": {
+    "name": "MaterialDeclaration",
+    "fields": [
+      {
+        "name": "title",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "vesselComponentId",
+        "kind": "string",
+        "required": true,
+        "relation": "VesselComponent"
+      },
+      {
+        "name": "material",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "substance",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "quantityKg",
+        "kind": "number",
+        "required": true,
+        "min": 0
+      },
+      {
+        "name": "sourceReference",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "status",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "recyclingVesselId",
+        "kind": "string",
+        "required": true,
+        "relation": "RecyclingVessel"
+      }
+    ],
+    "parent": {
+      "entity": "RecyclingVessel",
+      "field": "recyclingVesselId"
+    }
+  },
+  "SupplierDeclaration": {
+    "name": "SupplierDeclaration",
+    "fields": [
+      {
+        "name": "title",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "vesselComponentId",
+        "kind": "string",
+        "required": true,
+        "relation": "VesselComponent"
+      },
+      {
+        "name": "supplier",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "declarationAt",
+        "kind": "date",
+        "required": true
+      },
+      {
+        "name": "scope",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "evidence",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "status",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "recyclingVesselId",
+        "kind": "string",
+        "required": true,
+        "relation": "RecyclingVessel"
+      }
+    ],
+    "parent": {
+      "entity": "RecyclingVessel",
+      "field": "recyclingVesselId"
+    }
+  },
+  "HazardSample": {
+    "name": "HazardSample",
+    "fields": [
+      {
+        "name": "title",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "vesselComponentId",
+        "kind": "string",
+        "required": true,
+        "relation": "VesselComponent"
+      },
+      {
+        "name": "sampledAt",
+        "kind": "date",
+        "required": true
+      },
+      {
+        "name": "laboratory",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "substance",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "resultText",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "status",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "recyclingVesselId",
+        "kind": "string",
+        "required": true,
+        "relation": "RecyclingVessel"
+      }
+    ],
+    "parent": {
+      "entity": "RecyclingVessel",
+      "field": "recyclingVesselId"
+    }
+  },
+  "IhmSurvey": {
+    "name": "IhmSurvey",
+    "fields": [
+      {
+        "name": "title",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "surveyor",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "surveyedAt",
+        "kind": "date",
+        "required": true
+      },
+      {
+        "name": "scope",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "findings",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "nextDueAt",
+        "kind": "date",
+        "required": true
+      },
+      {
+        "name": "status",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "recyclingVesselId",
+        "kind": "string",
+        "required": true,
+        "relation": "RecyclingVessel"
+      }
+    ],
+    "parent": {
+      "entity": "RecyclingVessel",
+      "field": "recyclingVesselId"
+    }
+  },
+  "RecyclingFacility": {
+    "name": "RecyclingFacility",
+    "fields": [
+      {
+        "name": "name",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "permitNumber",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "country",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "capacityTonnes",
+        "kind": "number",
+        "required": true,
+        "min": 0
+      },
+      {
+        "name": "authorizationExpiry",
+        "kind": "date",
+        "required": true
+      },
+      {
+        "name": "status",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "recyclingVesselId",
+        "kind": "string",
+        "required": true,
+        "relation": "RecyclingVessel"
+      }
+    ],
+    "parent": {
+      "entity": "RecyclingVessel",
+      "field": "recyclingVesselId"
+    }
+  },
+  "RecyclingPlan": {
+    "name": "RecyclingPlan",
+    "fields": [
+      {
+        "name": "title",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "recyclingFacilityId",
+        "kind": "string",
+        "required": true,
+        "relation": "RecyclingFacility"
+      },
+      {
+        "name": "version",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "plannedAt",
+        "kind": "date",
+        "required": true
+      },
+      {
+        "name": "handlingPlan",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "authorizationReference",
+        "kind": "string",
+        "required": false
+      },
+      {
+        "name": "status",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "recyclingVesselId",
+        "kind": "string",
+        "required": true,
+        "relation": "RecyclingVessel"
+      }
+    ],
+    "parent": {
+      "entity": "RecyclingVessel",
+      "field": "recyclingVesselId"
+    }
+  },
+  "RecyclingTransfer": {
+    "name": "RecyclingTransfer",
+    "fields": [
+      {
+        "name": "title",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "recyclingFacilityId",
+        "kind": "string",
+        "required": true,
+        "relation": "RecyclingFacility"
+      },
+      {
+        "name": "material",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "quantityKg",
+        "kind": "number",
+        "required": true,
+        "min": 0
+      },
+      {
+        "name": "transferredAt",
+        "kind": "date",
+        "required": true
+      },
+      {
+        "name": "receipt",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "status",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "recyclingVesselId",
+        "kind": "string",
+        "required": true,
+        "relation": "RecyclingVessel"
+      }
+    ],
+    "parent": {
+      "entity": "RecyclingVessel",
+      "field": "recyclingVesselId"
+    }
+  },
+  "OperationalTask": {
+    "name": "OperationalTask",
+    "fields": [
+      {
+        "name": "title",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "owner",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "priority",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "startAt",
+        "kind": "date",
+        "required": true
+      },
+      {
+        "name": "dueAt",
+        "kind": "date",
+        "required": true
+      },
+      {
+        "name": "done",
+        "kind": "boolean",
+        "required": true
+      },
+      {
+        "name": "notes",
+        "kind": "string",
+        "required": false
+      },
+      {
+        "name": "status",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "recyclingVesselId",
+        "kind": "string",
+        "required": true,
+        "relation": "RecyclingVessel"
+      }
+    ],
+    "parent": {
+      "entity": "RecyclingVessel",
+      "field": "recyclingVesselId"
+    }
+  },
+  "RuleVersion": {
+    "name": "RuleVersion",
+    "fields": [
+      {
+        "name": "title",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "jurisdiction",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "version",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "effectiveAt",
+        "kind": "date",
+        "required": true
+      },
+      {
+        "name": "expiresAt",
+        "kind": "date",
+        "required": false
+      },
+      {
+        "name": "sourceUrl",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "requirementText",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "status",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "recyclingVesselId",
+        "kind": "string",
+        "required": true,
+        "relation": "RecyclingVessel"
+      }
+    ],
+    "parent": {
+      "entity": "RecyclingVessel",
+      "field": "recyclingVesselId"
+    }
+  },
+  "DocumentRequirement": {
+    "name": "DocumentRequirement",
+    "fields": [
+      {
+        "name": "title",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "category",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "requiredBy",
+        "kind": "date",
+        "required": true
+      },
+      {
+        "name": "sourceReference",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "evidenceReference",
+        "kind": "string",
+        "required": false
+      },
+      {
+        "name": "reviewNotes",
+        "kind": "string",
+        "required": false
+      },
+      {
+        "name": "status",
+        "kind": "string",
+        "required": true
+      },
+      {
+        "name": "recyclingVesselId",
+        "kind": "string",
+        "required": true,
+        "relation": "RecyclingVessel"
+      }
+    ],
+    "parent": {
+      "entity": "RecyclingVessel",
+      "field": "recyclingVesselId"
+    }
+  }
+}

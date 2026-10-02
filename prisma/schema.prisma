@@ -1,0 +1,361 @@
+// Generated schema — modeled after beautyhqio conventions.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  active       Boolean @default(true)
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         Role     @default(ANALYST)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  ANALYST
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  actorName String?
+  action    String
+  entity    String
+  entityId  String?
+  detail    String?
+  createdAt DateTime @default(now())
+}
+
+model WorkflowAnalysis {
+ id String @id @default(cuid())
+ actorId String
+ workflow String
+ subjectEntity String
+ subjectId String
+ input Json
+ evidence Json
+ evidenceHash String
+ result Json
+ model String
+ receipt String?
+ createdAt DateTime @default(now())
+ @@index([workflow, createdAt])
+}
+model RecordReview {
+ id String @id @default(cuid())
+ actorId String
+ entity String
+ entityId String
+ version String
+ reason String
+ createdAt DateTime @default(now())
+ @@unique([entity, entityId, version, actorId])
+}
+model UsageBucket {
+ id String @id
+ calls Int
+}
+model IssuedCredential {
+ token String @id
+ entity String
+ entityId String
+ version String
+ assertion Json
+ createdAt DateTime @default(now())
+ revokedAt DateTime?
+ @@index([entity, entityId, createdAt])
+}
+
+model DomainArtifact {
+ id String @id @default(cuid())
+ subjectEntity String
+ subjectId String
+ title String
+ content String
+ contentHash String
+ actorId String
+ approvedBy String?
+ createdAt DateTime @default(now())
+ @@index([subjectEntity, subjectId])
+}
+
+model RecordApproval {
+ id String @id
+ version String
+}
+model DomainExecution {
+ id String @id
+ actorId String
+ connectorId String
+ action String
+ subjectEntity String
+ subjectId String
+ version String
+ status String
+ result Json?
+ createdAt DateTime @default(now())
+}
+
+model WorkSession {
+ id String @id @default(cuid())
+ actorId String
+ respondentId String
+ subjectEntity String
+ subjectId String
+ questions Json
+ answers Json
+ currentQuestion String?
+ status String
+ deadline DateTime
+ createdAt DateTime @default(now())
+ @@index([respondentId, createdAt])
+}
+model SessionMedia {
+ id String @id @default(cuid())
+ sessionId String
+ questionId String
+ actorId String
+ contentType String
+ bytes Bytes
+ contentHash String
+ createdAt DateTime @default(now())
+ @@index([sessionId])
+}
+
+model AppSetting {
+ id String @id
+ value Json
+ updatedAt DateTime @updatedAt
+}
+
+model RecyclingVessel {
+ id String @id @default(cuid())
+ name String
+ imoNumber String
+ flag String
+ owner String
+ grossTonnage Float
+ surveyDueAt DateTime
+ status String @default("Draft")
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([createdAt])
+ inverseVesselComponent_recyclingVesselId VesselComponent[] @relation("VesselComponent_recyclingVesselId")
+ inverseMaterialDeclaration_recyclingVesselId MaterialDeclaration[] @relation("MaterialDeclaration_recyclingVesselId")
+ inverseSupplierDeclaration_recyclingVesselId SupplierDeclaration[] @relation("SupplierDeclaration_recyclingVesselId")
+ inverseHazardSample_recyclingVesselId HazardSample[] @relation("HazardSample_recyclingVesselId")
+ inverseIhmSurvey_recyclingVesselId IhmSurvey[] @relation("IhmSurvey_recyclingVesselId")
+ inverseRecyclingFacility_recyclingVesselId RecyclingFacility[] @relation("RecyclingFacility_recyclingVesselId")
+ inverseRecyclingPlan_recyclingVesselId RecyclingPlan[] @relation("RecyclingPlan_recyclingVesselId")
+ inverseRecyclingTransfer_recyclingVesselId RecyclingTransfer[] @relation("RecyclingTransfer_recyclingVesselId")
+ inverseOperationalTask_recyclingVesselId OperationalTask[] @relation("OperationalTask_recyclingVesselId")
+ inverseRuleVersion_recyclingVesselId RuleVersion[] @relation("RuleVersion_recyclingVesselId")
+ inverseDocumentRequirement_recyclingVesselId DocumentRequirement[] @relation("DocumentRequirement_recyclingVesselId")
+}
+
+model VesselComponent {
+ id String @id @default(cuid())
+ name String
+ componentCode String
+ location String
+ installedAt DateTime
+ manufacturer String
+ status String @default("Draft")
+ recyclingVesselId String
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([createdAt])
+ @@index([recyclingVesselId])
+ linkedRecyclingVesselId RecyclingVessel @relation("VesselComponent_recyclingVesselId", fields: [recyclingVesselId], references: [id], onDelete: Restrict)
+ inverseMaterialDeclaration_vesselComponentId MaterialDeclaration[] @relation("MaterialDeclaration_vesselComponentId")
+ inverseSupplierDeclaration_vesselComponentId SupplierDeclaration[] @relation("SupplierDeclaration_vesselComponentId")
+ inverseHazardSample_vesselComponentId HazardSample[] @relation("HazardSample_vesselComponentId")
+}
+
+model MaterialDeclaration {
+ id String @id @default(cuid())
+ title String
+ vesselComponentId String
+ material String
+ substance String
+ quantityKg Float
+ sourceReference String
+ status String @default("Draft")
+ recyclingVesselId String
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([createdAt])
+ @@index([recyclingVesselId])
+ linkedVesselComponentId VesselComponent @relation("MaterialDeclaration_vesselComponentId", fields: [vesselComponentId], references: [id], onDelete: Restrict)
+ linkedRecyclingVesselId RecyclingVessel @relation("MaterialDeclaration_recyclingVesselId", fields: [recyclingVesselId], references: [id], onDelete: Restrict)
+}
+
+model SupplierDeclaration {
+ id String @id @default(cuid())
+ title String
+ vesselComponentId String
+ supplier String
+ declarationAt DateTime
+ scope String
+ evidence String
+ status String @default("Draft")
+ recyclingVesselId String
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([createdAt])
+ @@index([recyclingVesselId])
+ linkedVesselComponentId VesselComponent @relation("SupplierDeclaration_vesselComponentId", fields: [vesselComponentId], references: [id], onDelete: Restrict)
+ linkedRecyclingVesselId RecyclingVessel @relation("SupplierDeclaration_recyclingVesselId", fields: [recyclingVesselId], references: [id], onDelete: Restrict)
+}
+
+model HazardSample {
+ id String @id @default(cuid())
+ title String
+ vesselComponentId String
+ sampledAt DateTime
+ laboratory String
+ substance String
+ resultText String
+ status String @default("Draft")
+ recyclingVesselId String
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([createdAt])
+ @@index([recyclingVesselId])
+ linkedVesselComponentId VesselComponent @relation("HazardSample_vesselComponentId", fields: [vesselComponentId], references: [id], onDelete: Restrict)
+ linkedRecyclingVesselId RecyclingVessel @relation("HazardSample_recyclingVesselId", fields: [recyclingVesselId], references: [id], onDelete: Restrict)
+}
+
+model IhmSurvey {
+ id String @id @default(cuid())
+ title String
+ surveyor String
+ surveyedAt DateTime
+ scope String
+ findings String
+ nextDueAt DateTime
+ status String @default("Draft")
+ recyclingVesselId String
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([createdAt])
+ @@index([recyclingVesselId])
+ linkedRecyclingVesselId RecyclingVessel @relation("IhmSurvey_recyclingVesselId", fields: [recyclingVesselId], references: [id], onDelete: Restrict)
+}
+
+model RecyclingFacility {
+ id String @id @default(cuid())
+ name String
+ permitNumber String
+ country String
+ capacityTonnes Float
+ authorizationExpiry DateTime
+ status String @default("Draft")
+ recyclingVesselId String
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([createdAt])
+ @@index([recyclingVesselId])
+ linkedRecyclingVesselId RecyclingVessel @relation("RecyclingFacility_recyclingVesselId", fields: [recyclingVesselId], references: [id], onDelete: Restrict)
+ inverseRecyclingPlan_recyclingFacilityId RecyclingPlan[] @relation("RecyclingPlan_recyclingFacilityId")
+ inverseRecyclingTransfer_recyclingFacilityId RecyclingTransfer[] @relation("RecyclingTransfer_recyclingFacilityId")
+}
+
+model RecyclingPlan {
+ id String @id @default(cuid())
+ title String
+ recyclingFacilityId String
+ version String
+ plannedAt DateTime
+ handlingPlan String
+ authorizationReference String?
+ status String @default("Draft")
+ recyclingVesselId String
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([createdAt])
+ @@index([recyclingVesselId])
+ linkedRecyclingFacilityId RecyclingFacility @relation("RecyclingPlan_recyclingFacilityId", fields: [recyclingFacilityId], references: [id], onDelete: Restrict)
+ linkedRecyclingVesselId RecyclingVessel @relation("RecyclingPlan_recyclingVesselId", fields: [recyclingVesselId], references: [id], onDelete: Restrict)
+}
+
+model RecyclingTransfer {
+ id String @id @default(cuid())
+ title String
+ recyclingFacilityId String
+ material String
+ quantityKg Float
+ transferredAt DateTime
+ receipt String
+ status String @default("Draft")
+ recyclingVesselId String
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([createdAt])
+ @@index([recyclingVesselId])
+ linkedRecyclingFacilityId RecyclingFacility @relation("RecyclingTransfer_recyclingFacilityId", fields: [recyclingFacilityId], references: [id], onDelete: Restrict)
+ linkedRecyclingVesselId RecyclingVessel @relation("RecyclingTransfer_recyclingVesselId", fields: [recyclingVesselId], references: [id], onDelete: Restrict)
+}
+
+model OperationalTask {
+ id String @id @default(cuid())
+ title String
+ owner String
+ priority String
+ startAt DateTime
+ dueAt DateTime
+ done Boolean
+ notes String?
+ status String @default("Draft")
+ recyclingVesselId String
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([createdAt])
+ @@index([recyclingVesselId])
+ linkedRecyclingVesselId RecyclingVessel @relation("OperationalTask_recyclingVesselId", fields: [recyclingVesselId], references: [id], onDelete: Restrict)
+}
+
+model RuleVersion {
+ id String @id @default(cuid())
+ title String
+ jurisdiction String
+ version String
+ effectiveAt DateTime
+ expiresAt DateTime?
+ sourceUrl String
+ requirementText String
+ status String @default("Draft")
+ recyclingVesselId String
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([createdAt])
+ @@index([recyclingVesselId])
+ linkedRecyclingVesselId RecyclingVessel @relation("RuleVersion_recyclingVesselId", fields: [recyclingVesselId], references: [id], onDelete: Restrict)
+}
+
+model DocumentRequirement {
+ id String @id @default(cuid())
+ title String
+ category String
+ requiredBy DateTime
+ sourceReference String
+ evidenceReference String?
+ reviewNotes String?
+ status String @default("Draft")
+ recyclingVesselId String
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([createdAt])
+ @@index([recyclingVesselId])
+ linkedRecyclingVesselId RecyclingVessel @relation("DocumentRequirement_recyclingVesselId", fields: [recyclingVesselId], references: [id], onDelete: Restrict)
+}
